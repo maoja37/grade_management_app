@@ -1,11 +1,10 @@
-import 'package:animator/animator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:grade_management_app/global/constants/spacing.dart';
 import 'package:grade_management_app/global/widgets/design_button.dart';
 import 'package:grade_management_app/modules/onboarding/login/login_bottom_sheet.dart';
 import 'package:grade_management_app/modules/onboarding/signup/signup_bottom_sheet.dart';
+import 'package:grade_management_app/modules/onboarding/widgets/splash_animated_widgets.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -37,98 +36,80 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: const Color(0xFFCAEEA3),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const HorizontalSpacing(double.infinity),
-                  const VerticalSpacing(436),
-                  AnimatedBuilder(
-                      animation: _animation,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _animation.value,
-                          child: SvgPicture.asset(
-                              'assets/oc-on-the-laptop-ellipse.svg'),
-                        );
-                      }),
-                  const VerticalSpacing(74),
-                  const Text(
-                    'Calculate your GPA',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Stack(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const HorizontalSpacing(double.infinity),
+                    const VerticalSpacing(436),
+                    AnimatedEclipse(animation: _animation),
+                    const VerticalSpacing(74),
+                    const Text(
+                      'Calculate your GPA',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  const VerticalSpacing(12),
-                  const Text(
-                    'Keep track of your GPA with the most \nbeautifully designed and intuitive GPA \ncalculator',
-                    style: TextStyle(
-                      fontSize: 16,
+                    const VerticalSpacing(12),
+                    const Text(
+                      'Keep track of your GPA with the most \nbeautifully designed and intuitive GPA \ncalculator',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const VerticalSpacing(32),
-                  DesignButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) => const LoginBottomSheet());
-                      },
-                      text: 'Login'),
-                  const VerticalSpacing(16),
-                  RichText(
-                    text: TextSpan(
-                        text: 'Don’t have an account? ',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: Colors.black),
-                        children: [
-                          TextSpan(
-                            text: 'Create one',
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    builder: (context) =>
-                                        const SignupBottomSheet());
-                              },
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 16),
-                          )
-                        ]),
-                  )
-                ],
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                child: Animator<double>(
-                    duration: const Duration(milliseconds: 1000),
-                    cycles: 0,
-                    curve: Curves.linear,
-                    tween: Tween<double>(begin: 210, end: 220),
-                    builder: (context, animatorState, child) {
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          VerticalSpacing(animatorState.value),
-                          SvgPicture.asset('assets/oc-on-the-laptop.svg'),
-                        ],
-                      );
-                    }),
-              )
-            ],
+                    const VerticalSpacing(32),
+                    DesignButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => const LoginBottomSheet());
+                        },
+                        text: 'Login'),
+                    const VerticalSpacing(16),
+                    RichText(
+                      text: TextSpan(
+                          text: 'Don’t have an account? ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16,
+                              color: Colors.black),
+                          children: [
+                            TextSpan(
+                              text: 'Create one',
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      builder: (context) =>
+                                          const SignupBottomSheet());
+                                },
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16),
+                            )
+                          ]),
+                    )
+                  ],
+                ),
+                const Positioned(
+                  left: 0,
+                  right: 0,
+                  child: AnimatedBoy(),
+                )
+              ],
+            ),
           ),
         ));
   }
 }
+
+

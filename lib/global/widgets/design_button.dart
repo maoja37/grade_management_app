@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DesignButton extends StatelessWidget {
+class DesignButton extends StatefulWidget {
   final bool loading;
   final void Function() onPressed;
   final String text;
@@ -11,14 +11,19 @@ class DesignButton extends StatelessWidget {
       super.key});
 
   @override
+  State<DesignButton> createState() => _DesignButtonState();
+}
+
+class _DesignButtonState extends State<DesignButton> {
+  @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: onPressed,
+      onPressed: widget.onPressed,
       color: Colors.black,
       minWidth: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 14),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-      child: loading
+      child: widget.loading
           ? const SizedBox(
               height: 11,
               width: 11,
@@ -27,7 +32,7 @@ class DesignButton extends StatelessWidget {
                 strokeWidth: 2,
               ))
           : Text(
-              text,
+              widget.text,
               style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,

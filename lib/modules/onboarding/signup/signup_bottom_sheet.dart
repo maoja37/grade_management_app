@@ -1,10 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:grade_management_app/global/auth_service.dart';
 import 'package:grade_management_app/global/constants/spacing.dart';
+import 'package:grade_management_app/global/services/auth_service.dart';
 import 'package:grade_management_app/global/utils/custom_input_border.dart';
 import 'package:grade_management_app/global/widgets/bottom_sheet_notch.dart';
+import 'package:grade_management_app/global/widgets/custom_toast.dart';
 import 'package:grade_management_app/global/widgets/design_button.dart';
 import 'package:grade_management_app/modules/onboarding/signup/update_username_bottom_sheet.dart';
 import 'package:iconsax/iconsax.dart';
@@ -17,13 +20,13 @@ class SignupBottomSheet extends StatefulWidget {
 }
 
 class _SignupBottomSheetState extends State<SignupBottomSheet> {
+  bool _isLoading = false;
   final AuthService _authService = AuthService();
   //this key is used for form validation
   final _formKey = GlobalKey<FormState>();
 
-  //this controllers are used to get the values from the appropriate text fields
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
 
   bool _obscureText = true;
 
@@ -37,8 +40,11 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    _updateUsernameBottomSheet = UpdateUsernameBottomSheet();
+    //This is here for a reason
+    _updateUsernameBottomSheet = const UpdateUsernameBottomSheet();
+
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
     super.initState();
   }
 
@@ -172,43 +178,49 @@ class _SignupBottomSheetState extends State<SignupBottomSheet> {
                 ),
                 const VerticalSpacing(24),
                 DesignButton(
+                    loading: _isLoading,
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        final currentContext = context;
                         try {
-                          _authService.registerWithEmailAndPassword(
+                          await _authService.registerWithEmailAndPassword(
                               _emailController.text, _passwordController.text);
-                          Navigator.pop(context);
+                          Navigator.pop(currentContext);
+                          currentContext.showToast(
+                              message: 'Account created, please update name');
 
-                          ScaffoldMessenger.of(_formKey.currentState!.context)
-                              .showSnackBar(const SnackBar(
-                            content: Text(
-                                'Account created successfully, Proceed to login'),
-                          ));
                           showModalBottomSheet(
-                              context: context,
+                              context: currentContext,
                               isScrollControlled: true,
+                              isDismissible: false,
                               builder: (context) => _updateUsernameBottomSheet);
                         } on FirebaseAuthException catch (e) {
+                          setState(() {
+                            _isLoading = false;
+                          });
                           if (e.code == 'weak-password') {
-                            ScaffoldMessenger.of(_formKey.currentState!.context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('Password is too weak'),
-                            ));
+                            currentContext.showToast(
+                                message: 'Password is too weak',
+                                backgroundColor: const Color(0xffFCEEEE),
+                                textColor: const Color(0xffEA0000));
                           } else if (e.code == 'email-already-in-use') {
-                            ScaffoldMessenger.of(_formKey.currentState!.context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('Email already in use'),
-                            ));
+                            currentContext.showToast(
+                                message: 'Email already in use',
+                                backgroundColor: const Color(0xffFCEEEE),
+                                textColor: const Color(0xffEA0000));
                           } else if (e.code == 'network-request-failed') {
-                            ScaffoldMessenger.of(_formKey.currentState!.context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('There was a network error'),
-                            ));
+                            currentContext.showToast(
+                                message: 'There was a network error',
+                                backgroundColor: const Color(0xffFCEEEE),
+                                textColor: const Color(0xffEA0000));
                           } else {
-                            ScaffoldMessenger.of(_formKey.currentState!.context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('Something went wrong'),
-                            ));
+                            currentContext.showToast(
+                                message: 'Something went wrong',
+                                backgroundColor: const Color(0xffFCEEEE),
+                                textColor: const Color(0xffEA0000));
                           }
                         }
                       }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grade_management_app/global/constants/spacing.dart';
+import 'package:grade_management_app/modules/dashboard/dashboard_page/widgets/custom_floating_action_button.dart';
 import 'package:grade_management_app/modules/dashboard/dashboard_page/widgets/widgets.dart';
 import 'package:grade_management_app/modules/dashboard/models/models.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -46,25 +47,8 @@ class _YearResultPageState extends State<YearResultPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffFEFCF6),
-      floatingActionButton: MaterialButton(
-          onPressed: () {
-            showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => _addCourseBottomSheet);
-          },
-          color: const Color(0xffCAEEA3),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.add),
-              SizedBox(width: 8),
-              Text('Add new'),
-            ],
-          )),
+      floatingActionButton:
+          CustomFloatingActionButton(widget: _addCourseBottomSheet),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -193,6 +177,7 @@ class FirstSemesterTabView extends StatelessWidget {
                               course: courses[index],
                             )));
               }),
+          const VerticalSpacing(10)
         ],
       ),
     );
@@ -236,6 +221,7 @@ class SecondSemesterTabView extends StatelessWidget {
                               course: courses[index],
                             )));
               }),
+          const VerticalSpacing(30),
         ],
       ),
     );
@@ -282,22 +268,6 @@ class CourseTile extends StatelessWidget {
               )
             ],
           ),
-          Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xffC7E9E6),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: const Row(
-                children: [
-                  Text('Edit'),
-                  HorizontalSpacing(8),
-                  Icon(
-                    Iconsax.edit_2,
-                    size: 16,
-                  ),
-                ],
-              ))
         ],
       ),
     );

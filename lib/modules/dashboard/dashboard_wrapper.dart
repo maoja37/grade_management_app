@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grade_management_app/modules/dashboard/dashboard_page/dashboard_view.dart';
+import 'package:grade_management_app/modules/dashboard/insight_page/insights_page.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -19,11 +20,7 @@ class _DashboardWrapperState extends State<DashboardWrapper> {
         return const DashboardView();
 
       case 1:
-        return Container(
-          child: const Center(
-            child: Text("Analytics"),
-          ),
-        );
+        return const InsightsScreen();
       default:
         return Container();
     }
@@ -48,7 +45,7 @@ class _DashboardWrapperState extends State<DashboardWrapper> {
               SalomonBottomBarItem(
                   icon: const Icon(Iconsax.chart_3),
                   activeIcon: const Icon(Iconsax.chart_34),
-                  title: const Text("Analytics"),
+                  title: const Text("Insights"),
                   selectedColor: const Color(0xffCAEEA3),
                   unselectedColor: const Color(0XffABACA5)),
             ]));

@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:grade_management_app/global/auth_service.dart';
 import 'package:grade_management_app/global/constants/spacing.dart';
+import 'package:grade_management_app/global/services/auth_service.dart';
 import 'package:grade_management_app/global/utils/custom_input_border.dart';
+import 'package:grade_management_app/global/utils/extensions.dart';
 import 'package:grade_management_app/global/widgets/bottom_sheet_notch.dart';
+import 'package:grade_management_app/global/widgets/custom_toast.dart';
 import 'package:grade_management_app/global/widgets/design_button.dart';
 import 'package:iconsax/iconsax.dart';
 
-class UpdateUsernameBottomSheet extends StatelessWidget {
-  final TextEditingController _usernameController = TextEditingController();
-  UpdateUsernameBottomSheet({
+class UpdateUsernameBottomSheet extends StatefulWidget {
+
+  const UpdateUsernameBottomSheet({
     super.key,
   });
 
+  @override
+  State<UpdateUsernameBottomSheet> createState() => _UpdateUsernameBottomSheetState();
+}
+
+class _UpdateUsernameBottomSheetState extends State<UpdateUsernameBottomSheet> {
+  bool isLoading = false;
+  late TextEditingController _usernameController ;
+
+
+
   final AuthService _authService = AuthService();
+
   final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    _usernameController = TextEditingController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -98,24 +118,35 @@ class UpdateUsernameBottomSheet extends StatelessWidget {
                 ),
                 const VerticalSpacing(29),
                 DesignButton(
+                  loading: isLoading,
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
+                        setState(() {
+                          isLoading = true;
+                        });
                         await _authService
-                            .updateDisplayname(_usernameController.text)
+                            .updateDisplayName(_usernameController.text)
                             .then((value) {
-                          ScaffoldMessenger.of(formKey.currentState!.context)
-                              .showSnackBar(const SnackBar(
-                                  content:
-                                      Text('Name Updated, Proceed to Login')));
+                          context.showToast(
+                              message: 'Name Updated, Proceed to Login');
                         }).catchError((error) {
-                          ScaffoldMessenger.of(formKey.currentState!.context)
-                              .showSnackBar(const SnackBar(
-                                  content: Text('Error Updating Name')));
+                          setState(() {
+                            isLoading = false;
+                          });
+                          context.showToast(
+                              message: 'Error Updating Name',
+                              backgroundColor: const Color(0xffFCEEEE),
+                              textColor: const Color(0xffEA0000));
+                         
                           return null; // return null instead of ScaffoldFeatureController
                         }).whenComplete(() {
+                          setState(() {
+                            isLoading = false;
+                            'update username when complete'.log();
+                          });
                           Navigator.of(context).pop();
                         });
-                      }
+                      }             
                     },
                     text: 'Update Username'),
                 const VerticalSpacing(24),

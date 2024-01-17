@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grade_management_app/global/constants/spacing.dart';
-import 'package:grade_management_app/global/utils.dart';
+import 'package:grade_management_app/global/utils/utility_functions.dart';
 import 'package:grade_management_app/modules/dashboard/dashboard_page/year_result_page.dart';
 import 'package:grade_management_app/modules/dashboard/models/models.dart';
 
@@ -31,7 +31,7 @@ class DashboardGridContainer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            Text( 
               year.name,
               textAlign: TextAlign.start,
               style: const TextStyle(

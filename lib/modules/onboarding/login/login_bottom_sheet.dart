@@ -1,10 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:grade_management_app/global/auth_service.dart';
 import 'package:grade_management_app/global/constants/spacing.dart';
+import 'package:grade_management_app/global/services/auth_service.dart';
 import 'package:grade_management_app/global/utils/custom_input_border.dart';
 import 'package:grade_management_app/global/widgets/bottom_sheet_notch.dart';
+import 'package:grade_management_app/global/widgets/custom_toast.dart';
 import 'package:grade_management_app/global/widgets/design_button.dart';
 import 'package:grade_management_app/modules/dashboard/dashboard_wrapper.dart';
 import 'package:iconsax/iconsax.dart';
@@ -17,19 +20,26 @@ class LoginBottomSheet extends StatefulWidget {
 }
 
 class _LoginBottomSheetState extends State<LoginBottomSheet> {
+  bool _isLoading = false;
   final AuthService _authService = AuthService();
   //this key is used to validate the forms
   final formKey = GlobalKey<FormState>();
 
-//this controllers are used to get the values from the appropriate text fields
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
   bool _obscureText = true;
 
   void _toggleObscureText() {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  @override
+  void initState() {
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    super.initState();
   }
 
   @override
@@ -159,60 +169,72 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                 ),
                 const VerticalSpacing(24),
                 DesignButton(
+                    loading: _isLoading,
                     onPressed: () async {
                       //this conditonal checks if the form is valid for submission or not and only then does it try to login the user
                       if (formKey.currentState!.validate()) {
                         try {
                           //when this button is pressed the loading variable is set to true and the CircularProgressIndicator is shown
-                          _authService.signInWithEmailAndPassword(
-                              _emailController.text, _passwordController.text);
-                          print(_authService.auth.currentUser);
-                          Navigator.pop(context);
-                          User? user = _authService.auth.currentUser;
-                          if (user != null) {
-                            if (user.email != null) {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const DashboardWrapper(),
-                                ),
-                              );
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          await _authService
+                              .signInWithEmailAndPassword(_emailController.text,
+                                  _passwordController.text)
+                              .then((userr) {
+                            Navigator.pop(context);
+                            User? user = _authService.auth.currentUser;
+                            if (user != null) {
+                              if (user.email != null) {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DashboardWrapper(),
+                                  ),
+                                );
+                              } else {
+                                context.showToast(
+                                    message: 'Something went wrong',
+                                    backgroundColor: const Color(0xffFCEEEE),
+                                    textColor: const Color(0xffEA0000));
+                              }
                             } else {
-                              ScaffoldMessenger.of(
-                                      formKey.currentState!.context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text('Something went wrong'),
-                              ));
+                              context.showToast(
+                                  message: 'Something went wrong',
+                                  backgroundColor: const Color(0xffFCEEEE),
+                                  textColor: const Color(0xffEA0000));
                             }
-                          }
+                          });
                         } on FirebaseAuthException catch (e) {
                           //when the exception is caught the loading variable is set to false and the CircularProgressIndicator is hidden
-
+                          setState(() {
+                            _isLoading = false;
+                          });
                           if (e.code == 'invalid-email') {
-                            ScaffoldMessenger.of(formKey.currentState!.context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('Please enter valid email'),
-                            ));
+                            context.showToast(
+                                message: 'Error Updating Name',
+                                backgroundColor: const Color(0xffFCEEEE),
+                                textColor: const Color(0xffEA0000));
                           } else if (e.code == 'user-disabled') {
-                            ScaffoldMessenger.of(formKey.currentState!.context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('User disabled'),
-                            ));
+                            context.showToast(
+                                message: 'User disabled',
+                                backgroundColor: const Color(0xffFCEEEE),
+                                textColor: const Color(0xffEA0000));
                           } else if (e.code == 'wrong-password') {
-                            ScaffoldMessenger.of(formKey.currentState!.context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('Wrong Password entered'),
-                            ));
+                            context.showToast(
+                                message: 'Wrong Password entered',
+                                backgroundColor: const Color(0xffFCEEEE),
+                                textColor: const Color(0xffEA0000));
                           } else if (e.code == 'user-not-found') {
-                            ScaffoldMessenger.of(formKey.currentState!.context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('User not found'),
-                            ));
+                            context.showToast(
+                                message: 'User not found',
+                                backgroundColor: const Color(0xffFCEEEE),
+                                textColor: const Color(0xffEA0000));
                           } else {
-                            ScaffoldMessenger.of(formKey.currentState!.context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('User disabled'),
-                            ));
+                            context.showToast(
+                                message: 'Something went wrong',
+                                backgroundColor: const Color(0xffFCEEEE),
+                                textColor: const Color(0xffEA0000));
                           }
                         }
                       }

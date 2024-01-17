@@ -1,6 +1,6 @@
-# grade_management_app
+# CGPA Calculator
 
-A new Flutter project.
+This is a cgpa calculator app with 
 
 ## Getting Started
 

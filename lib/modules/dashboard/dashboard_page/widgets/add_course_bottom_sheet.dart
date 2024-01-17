@@ -137,6 +137,15 @@ class AddCourseBottomSheet extends StatelessWidget {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(1),
                         ],
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a unit';
+                          }
+                          if (value != RegExp(r'[0-9]').stringMatch(value)) {
+                            return 'Please enter a valid number';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           labelText: 'Unit',
                           contentPadding:
@@ -186,12 +195,6 @@ class AddCourseBottomSheet extends StatelessWidget {
                           student!.years[index].semesters[1].courses
                               .add(course);
                         }
-
-                        currentTab == 0
-                            ? print(
-                                'first semester course added namely ${student.years[index].semesters[0].courses.last.name}')
-                            : print(
-                                'second semester course added namely ${student.years[index].semesters[1].courses.last.name}');
                         Hive.box<Student>(studentBoxName).putAt(0, student);
                         Navigator.pop(context);
                         _courseNameController.clear();

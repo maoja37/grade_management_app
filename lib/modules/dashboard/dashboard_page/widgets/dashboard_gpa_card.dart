@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grade_management_app/global/constants/spacing.dart';
-import 'package:grade_management_app/global/utils.dart';
+import 'package:grade_management_app/global/utils/utility_functions.dart';
 import 'package:grade_management_app/modules/dashboard/models/models.dart';
 
 class DashboardGpaCard extends StatelessWidget {

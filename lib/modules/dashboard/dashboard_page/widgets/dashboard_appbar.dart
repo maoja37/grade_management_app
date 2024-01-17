@@ -1,8 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:grade_management_app/global/auth_service.dart';
 import 'package:grade_management_app/global/constants/spacing.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:grade_management_app/global/services/auth_service.dart';
 
 class DashboardAppbar extends StatelessWidget {
   final AuthService _authService = AuthService();
@@ -26,7 +25,11 @@ class DashboardAppbar extends StatelessWidget {
                 backgroundColor: const Color(0xffDF883A),
                 child: Text(
                   currentUser != null
-                      ? currentUser.displayName!.substring(0, 1).toUpperCase()
+                      ? currentUser.displayName != null
+                          ? currentUser.displayName!
+                              .substring(0, 1)
+                              .toUpperCase()
+                          : 'U'
                       : 'O',
                   style: const TextStyle(fontSize: 24, color: Colors.white),
                 ),
@@ -39,7 +42,7 @@ class DashboardAppbar extends StatelessWidget {
                 children: [
                   AnimatedTextKit(totalRepeatCount: 2, animatedTexts: [
                     WavyAnimatedText(
-                      currentUser != null ? currentUser.displayName! : 'User',
+                     currentUser?.displayName ?? 'User',
                       textStyle: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
@@ -58,7 +61,7 @@ class DashboardAppbar extends StatelessWidget {
               ),
             ],
           ),
-          const Icon(Iconsax.setting_2)
+          Container(),
         ],
       ),
     );
