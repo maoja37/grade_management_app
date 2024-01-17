@@ -1,16 +1,23 @@
 # CGPA Calculator
 
-This is a cgpa calculator app with 
+This is a cgpa calculator app with features like 
 
-## Getting Started
+* Firebase Auth Integration: Implemented Firebase Auth for secure authentication, ensuring that only authorized users could access the app. This was also to make sure nobody could just pick up your phone and check your cgpa
 
-This project is a starting point for a Flutter application.
+* Splash Screen Animation: Worked on animating the splash screen to create an engaging and visually appealing user experience.
 
-A few resources to get you started if this is your first Flutter project:
+* Offline Data Storage: Stored all grades data offline, providing users with the assurance that their data is safe and accessible even without an internet connection.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* Insights: Offered valuable insights based on the user's CGPA, such as academic insights, graduation eligibility, and a chart depicting GPA progression over time for a visual representation of progress.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Open to bug fixes and adding features
+
+Feel free to star the project for personal use 
+
+You can also make PRs to fix bugs or add features, like for example i haven't gotten around
+to implement the delete feature
+
+Below is a live demo of how the app works 
+
+
+(demo/cgpa_demo.gif)
