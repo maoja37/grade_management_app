@@ -20,4 +20,5 @@ to implement the delete feature
 Below is a live demo of how the app works 
 
 
-(demo/cgpa_demo.gif)
+![](demo/cgpa_demo.gif)
+                                                                                                                                                                            

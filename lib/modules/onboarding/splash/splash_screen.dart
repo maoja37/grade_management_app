@@ -2,8 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:grade_management_app/global/constants/spacing.dart';
 import 'package:grade_management_app/global/widgets/design_button.dart';
-import 'package:grade_management_app/modules/onboarding/login/login_bottom_sheet.dart';
-import 'package:grade_management_app/modules/onboarding/signup/signup_bottom_sheet.dart';
+import 'package:grade_management_app/modules/onboarding/login/pages/login_bottom_sheet.dart';
+import 'package:grade_management_app/modules/onboarding/signup/pages/signup_bottom_sheet.dart';
 import 'package:grade_management_app/modules/onboarding/widgets/splash_animated_widgets.dart';
 
 class SplashScreen extends StatefulWidget {
